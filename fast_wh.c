@@ -19,27 +19,6 @@ static char fast_wh_trans_docstring[] =
 	 " 				 False: Compute transform of rows."
 	 " 		scale: If True, scale the output by sqrt(dimension).");
 
-
-/* Define methods of our module*/
-static PyMethodDef module_methods[] = {
-	{"fast_wh_trans", fast_wh_trans_fast_wh, METH_VARARGS,
-	 fast_wh_trans_docstring},
-	{NULL, NULL, 0, NULL}
-};
-
-/* Module initialization */
-PyMODINIT_FUNC initfast_wh(void)
-{
-	PyObject *m = Py_InitModule3("fast_wh", module_methods, module_docstring);
-
-	/* Make sure output is not null */
-	if (m == NULL)
-		return;
-
-	/* Load numpy functionality */
-	import_array();
-}
-
 /* Now start the main routine */
 static PyObject *fast_wh_trans_fast_wh(PyObject *self, PyObject *args)
 {
@@ -106,3 +85,24 @@ static PyObject *fast_wh_trans_fast_wh(PyObject *self, PyObject *args)
 	/* Return */
 	return output_obj;
 }
+
+/* Define methods of our module*/
+static PyMethodDef module_methods[] = {
+	{"fast_wh_trans", (PyCFunction)fast_wh_trans_fast_wh, METH_VARARGS,
+	 fast_wh_trans_docstring},
+	{NULL, NULL, 0, NULL}
+};
+
+/* Module initialization */
+PyMODINIT_FUNC initfast_wh(void)
+{
+	PyObject *m = Py_InitModule3("fast_wh", module_methods, module_docstring);
+
+	/* Make sure output is not null */
+	if (m == NULL)
+		return;
+
+	/* Load numpy functionality */
+	import_array();
+}
+
