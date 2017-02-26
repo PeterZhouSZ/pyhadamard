@@ -16,7 +16,7 @@ void _fast_wh(double *work, int N, double *output, unsigned char scale_output)
 	/* Warning! work variable will be modified! */
 
 	/* Compute add and difference vectors */
-	for (i = 0; i < N-1; i ++)
+	for (i = 0; i < N-1; i += 2)
 	{
 		work[i] = work[i] + work[i+1];
 		work[i+1] = work[i] - 2*work[i+1];
@@ -50,6 +50,9 @@ void _fast_wh(double *work, int N, double *output, unsigned char scale_output)
 		tmp = work;
 		work = output;
 		output = tmp;
+
+		/* Increment the level */
+		L += 1;
 	}
 
 	if (scale_output == TRUE)
@@ -62,7 +65,7 @@ void _fast_wh(double *work, int N, double *output, unsigned char scale_output)
 	}
 
 	/* Scale the output */
-	for (i = 0; i < N; i ++)
+	for (i = 0; i < N; i++)
 	{
 		output[i] = work[i]/scale;
 	}
@@ -84,12 +87,15 @@ void fast_wh_vec(double *input, int N, double *output,
 
 	/* Call the function */
 	_fast_wh(work, N, output, scale_output);
+
+	/* Free the work array */
+	free(work);
 }
 
 void fast_wh_mat(double *input, int M, int N, double *output, unsigned char dir,
 				 unsigned char scale_output)
 {
-	int i, j, stride, idx1, idx2;
+	int i, j, idx1, idx2;
 	double *work, *vec_output;
 
 	/* Allocate temporary work memory */
@@ -97,7 +103,6 @@ void fast_wh_mat(double *input, int M, int N, double *output, unsigned char dir,
 	{
 		work = (double *) malloc(M*sizeof(double));
 		vec_output = (double *) malloc(M*sizeof(double));
-		stride = N;
 		idx1 = N;
 		idx2 = M;
 	}
@@ -105,7 +110,6 @@ void fast_wh_mat(double *input, int M, int N, double *output, unsigned char dir,
 	{
 		work = (double *) malloc(N*sizeof(double));
 		vec_output = (double *) malloc(N*sizeof(double));
-		stride = 1;
 		idx1 = M;
 		idx2 = N;
 	}
@@ -127,4 +131,8 @@ void fast_wh_mat(double *input, int M, int N, double *output, unsigned char dir,
 			output[i*idx1 + j] = vec_output[j];
 		}
 	}
+
+	/* Free the data variables */
+	free(work);
+	free(vec_output);
 }

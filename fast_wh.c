@@ -4,27 +4,31 @@
 
 /* Docstring for the module */
 static char module_docstring[] = 
-	("Module for computing fast Walsh Hadamard transform for vectors"
-	 " and matrices. Implementation of the module is copied from the"
-	 " matlab implementation of the same."
-	 " Methods:"
-	 " 		fast_wh_trans");
+	(" Module for computing fast Walsh Hadamard transform for vectors\n"
+	 " and matrices. Implementation of the module is copied from the\n"
+	 " matlab implementation of the same.\n"
+	 " Methods:\n"
+	 " 		fast_wh_trans\n");
 
 /* Docstring for vector method */
 static char fast_wh_trans_docstring[] = 
-	("Function to implement fast Walsh Hadamard Transformation."
-	 " Inputs:"
-	 " 		input: Input vector/matrix whose transform is computed."
-	 " 		columns: True (default): Compute transform of columns."
-	 " 				 False: Compute transform of rows."
-	 " 		scale: If True, scale the output by sqrt(dimension).");
+	(" Function to implement fast Walsh Hadamard Transformation.\n"
+	 " Inputs:\n"
+	 " 		input: Input vector/matrix whose transform is computed.\n"
+	 " 		columns: True (default): Compute transform of columns.\n"
+	 " 				 False: Compute transform of rows.\n"
+	 " 		scale: If True (default), scale the output by sqrt(dimension).\n");
 
 /* Now start the main routine */
 static PyObject *fast_wh_trans_fast_wh(PyObject *self, PyObject *args)
 {
 	/* Three inputs and one output */
 	PyObject *X_obj, *output_obj;
-	unsigned char col, scale;
+	int col, scale;
+
+	/* Default arguments */
+	col = TRUE;
+	scale = TRUE;
 
 	/* Numpy array for X */
 	PyObject *X_array;
@@ -37,7 +41,7 @@ static PyObject *fast_wh_trans_fast_wh(PyObject *self, PyObject *args)
 	npy_intp dims[2];
 
 	/* Parse inputs */
-	if (!PyArg_ParseTuple(args, "Ouu", &X_obj, &col, &scale))
+	if (!PyArg_ParseTuple(args, "O|ii", &X_obj, &col, &scale))
 	{
 		return NULL;
 	}
